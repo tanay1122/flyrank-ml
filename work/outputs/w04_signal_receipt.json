@@ -1,0 +1,214 @@
+{
+  "notebook": "w04_signal_audit (ML-06, optional full-depth sibling of the ML-07 card)",
+  "slice": "month=2026-03, one row = one page, floor 100 imps / 10 days, gsc IS TRUE, aggregates <= 03-20",
+  "frame_pages": 83258,
+  "base_rate_pct": 15.9,
+  "test1_momentum": {
+    "main": "CONFIRMED",
+    "slice2": "MIXED",
+    "spearman_main": 0.107,
+    "spearman_slice2": 0.025,
+    "table_main": [
+      {
+        "band": "<=0.5 (deep freeze)",
+        "n": 10468,
+        "decline_pct": 14.6637371036
+      },
+      {
+        "band": "0.5-0.7",
+        "n": 12848,
+        "decline_pct": 12.2665006227
+      },
+      {
+        "band": "0.7-1.0",
+        "n": 24727,
+        "decline_pct": 12.2699882719
+      },
+      {
+        "band": "1.0-1.3",
+        "n": 17067,
+        "decline_pct": 15.1579070721
+      },
+      {
+        "band": "1.3-2.0",
+        "n": 12385,
+        "decline_pct": 22.8259991926
+      },
+      {
+        "band": ">2.0 (hot spike)",
+        "n": 5763,
+        "decline_pct": 29.8108623981
+      }
+    ],
+    "table_slice2": [
+      {
+        "band": "<=0.5",
+        "n": 2825,
+        "decline_pct": 33.3097345133
+      },
+      {
+        "band": "0.5-1.0",
+        "n": 23072,
+        "decline_pct": 27.78259362
+      },
+      {
+        "band": "1.0-1.3",
+        "n": 14607,
+        "decline_pct": 31.0467584035
+      },
+      {
+        "band": "1.3-2.0",
+        "n": 10778,
+        "decline_pct": 30.1632956022
+      },
+      {
+        "band": ">2.0",
+        "n": 4947,
+        "decline_pct": 35.880331514
+      }
+    ]
+  },
+  "test2_volume": {
+    "verdict": "OPPOSITE",
+    "spearman": -0.136,
+    "pearson_raw": -0.0804,
+    "pearson_log1p": -0.1366,
+    "table": [
+      {
+        "volume_bucket": "100-500 (near floor)",
+        "n": 35073,
+        "decline_pct": 20.8251361446
+      },
+      {
+        "volume_bucket": "500-2k",
+        "n": 28374,
+        "decline_pct": 15.0348910975
+      },
+      {
+        "volume_bucket": "2k-10k",
+        "n": 16872,
+        "decline_pct": 9.0149359886
+      },
+      {
+        "volume_bucket": "10k-50k",
+        "n": 2844,
+        "decline_pct": 6.29395218
+      },
+      {
+        "volume_bucket": "50k+ (giants)",
+        "n": 95,
+        "decline_pct": 7.3684210526
+      }
+    ]
+  },
+  "test3_ctr": {
+    "verdict": "OPPOSITE",
+    "spearman": -0.122,
+    "table": [
+      {
+        "ctr_band": "Q1 (lowest CTR)",
+        "n": 20815,
+        "decline_pct": 21.9024741773,
+        "median_imp": 272.0
+      },
+      {
+        "ctr_band": "Q2",
+        "n": 20814,
+        "decline_pct": 17.9014125108,
+        "median_imp": 879.0
+      },
+      {
+        "ctr_band": "Q3",
+        "n": 20814,
+        "decline_pct": 13.0248870952,
+        "median_imp": 1332.0
+      },
+      {
+        "ctr_band": "Q4 (highest CTR)",
+        "n": 20815,
+        "decline_pct": 10.9584434302,
+        "median_imp": 832.0
+      }
+    ]
+  },
+  "flag_test_ctrfix": {
+    "verdict": "CONFIRMED (low-CTR pages decline more, at every readable position)",
+    "cells": [
+      {
+        "position": "top-3",
+        "n": 4367,
+        "ctr_tier": "low CTR",
+        "decline_pct": 20.9525990382
+      },
+      {
+        "position": "top-3",
+        "n": 4368,
+        "ctr_tier": "high CTR",
+        "decline_pct": 9.9816849817
+      },
+      {
+        "position": "4-10",
+        "n": 19549,
+        "ctr_tier": "low CTR",
+        "decline_pct": 19.6582945419
+      },
+      {
+        "position": "4-10",
+        "n": 19549,
+        "ctr_tier": "high CTR",
+        "decline_pct": 11.9443449793
+      },
+      {
+        "position": "11-30",
+        "n": 13221,
+        "ctr_tier": "low CTR",
+        "decline_pct": 18.5311247258
+      },
+      {
+        "position": "11-30",
+        "n": 13223,
+        "ctr_tier": "high CTR",
+        "decline_pct": 11.222869243
+      },
+      {
+        "position": "31+",
+        "n": 0,
+        "ctr_tier": "low CTR",
+        "decline_pct": null
+      },
+      {
+        "position": "31+",
+        "n": 8981,
+        "ctr_tier": "high CTR",
+        "decline_pct": 20.198196192
+      }
+    ],
+    "gaps": [
+      {
+        "position": "top-3",
+        "low_minus_high_gap_pp": 11.0
+      },
+      {
+        "position": "4-10",
+        "low_minus_high_gap_pp": 7.7
+      },
+      {
+        "position": "11-30",
+        "low_minus_high_gap_pp": 7.3
+      },
+      {
+        "position": "31+",
+        "low_minus_high_gap_pp": null
+      }
+    ]
+  },
+  "ctr_trap": {
+    "true_aggregate_pct": 0.3,
+    "mean_of_page_ctrs_pct": 0.28
+  },
+  "position_trap": {
+    "pos_mean_zero_rows": 0,
+    "pos_mean_null_rows": 0
+  },
+  "lane_lock": "Lane 2 (Refresh / Content Opportunity Scoring) CONFIRMED + LOCKED, week 4"
+}
