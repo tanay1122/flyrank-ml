@@ -1,0 +1,150 @@
+{
+  "notebook": "w06_validation_audit (ML-09, Week 6)",
+  "paper_findings": {
+    "paper": "FlyRank - The State of AI-Driven SEO in Numbers, March 2026 data report",
+    "scope": "341,701 content pieces, 57 brands; aggregate comparisons primary, ML appendix exploratory",
+    "source_url": "https://github.com/flyrank-bih/flyrank-ml-internship-starter/blob/main/docs/flyrank-seo-research-march-2026.pdf",
+    "finding_1": {
+      "name": "ML appendix - RF feature importance for the health score",
+      "paper_numbers": {
+        "rf_importance_top4_pct": {
+          "avg_position": 43,
+          "impressions": 32,
+          "scroll_depth": 15,
+          "ctr": 8
+        },
+        "health_score_composition": "impressions 30 pts + position 30 pts + ctr 20 pts + scroll depth 20 pts",
+        "health_x_position_corr": -0.592
+      },
+      "paper_disclosure": "the target itself is partly constructed from some of these inputs; importance is descriptive rather than causal",
+      "my_question": "label provenance: importance ranking over the label's own ingredients is close to mechanical - what survives a train-without-those-ingredients test, or a score-free outcome label?",
+      "where_i_test_it": "section 3 of this notebook (train-with / train-without confessions on my own features)"
+    },
+    "finding_2": {
+      "name": "ML appendix - logistic-regression growth prediction, 71% holdout accuracy",
+      "paper_numbers": {
+        "lr_holdout_accuracy_pct": 71,
+        "split_family": "80/20 holdout splits (RF, LR, decision tree)",
+        "ml_sample": "61.8K content pieces with sessions > 0 and impressions > 0",
+        "full_sample_growth_mix": "about 74.2K rising vs 45.3K falling (~62% majority class)"
+      },
+      "paper_disclosure": "no p-values or confidence intervals reported; observational study; ML pages exploratory and secondary",
+      "my_question": "validation design: (1) print the grow/decline base rate next to the accuracy - 71% on a ~62% base rate is ~9 skill points; (2) does the 71% survive a brand-grouped (or age-matched) holdout, given random 80/20 lets one brand's pages sit in train and test?",
+      "where_i_test_it": "sections 2-3 of this notebook (my model: random split vs client-grouped, base rate on every metric)"
+    }
+  },
+  "before_after": {
+    "before_random": {
+      "AUC": 67.4,
+      "P@20": 0.9,
+      "P@100": 0.66,
+      "P@500": 0.52
+    },
+    "after_grouped": {
+      "AUC": 65.9,
+      "P@20": 0.55,
+      "P@100": 0.47,
+      "P@500": 0.48
+    },
+    "base_rate_pct": 15.9,
+    "memorization_gap": {
+      "auc_pts": 1.5,
+      "p_at_20": 0.35
+    },
+    "stability_note": "grouped metrics are order-stable (GroupKFold assigns clients deterministically; reproduced to the digit across reruns); the shuffled/dishonest row is order-sensitive (KFold fixes positions over a parallel-GROUP-BY frame order) and wobbles between runs - labeled exhibit, never a claim",
+    "fold_auc_grouped": [
+      0.67,
+      0.645,
+      0.686,
+      0.634,
+      0.647
+    ],
+    "fold_auc_shuffled": [
+      0.678,
+      0.67,
+      0.671,
+      0.672,
+      0.676
+    ],
+    "all_folds_client_disjoint": true,
+    "error_examples": {
+      "false_picks_in_top40": 3,
+      "missed_decliners_beyond_rank500": 13037
+    }
+  },
+  "leak_audit": {
+    "checklist": {
+      "timeline_strict": {
+        "ok": true,
+        "evidence": "feature window max 2026-03-20 <= decision 2026-03-20 < label window min 2026-03-21..2026-03-31 <= 03-31"
+      },
+      "meta_date_neutralized": {
+        "ok": true,
+        "evidence": "67,109/83,258 pages (80.6%) have meta_unknown=1 forcing meta_stale_days=0; no post-decision date reaches a feature"
+      },
+      "no_label_siblings": {
+        "ok": true,
+        "evidence": "label-window columns ['target_mean', 'decline_11d'] absent from the 21-feature matrix (name scan: none; direct scan: none)"
+      },
+      "confession_test": {
+        "ok": true,
+        "evidence": "with 'target_mean' + 'label_ratio' added to features, grouped OOF AUC jumps 0.659 -> 1.000; removed afterwards"
+      },
+      "no_product_flags": {
+        "ok": true,
+        "evidence": "no existing-system scores in features (scan ['health_score', 'flag_summary', 'optimization_flag', 'internal_score', 'ai_flag', 'traffic_flag']: none); constructed flags ['ctr_fix_flag'] built from <= 03-20 page data only (construction receipted in w05)"
+      },
+      "population_disclosed": {
+        "ok": true,
+        "evidence": "page-keeping uses outcome-window info: 314 pages absent from the 03-21..31 window are dropped (aggregates-only), plus pace>0 (n=37) - disclosed as a choice in w05 and here (mortality-selection caveat)"
+      },
+      "grouped_split": {
+        "ok": true,
+        "evidence": "every grouped fold train/test client-disjoint (receipt printed in sec 2)"
+      },
+      "base_rate": {
+        "ok": true,
+        "evidence": "base rate 15.9% printed in the sec-2 table beside every AUC/P@K"
+      },
+      "top_feature_sane": {
+        "ok": true,
+        "evidence": "w05 permutation top = 'momentum_capped' (roc_auc drop ~0.033), top standardized coef 'momentum_capped' +0.276 - matches audited lane directions; honest AUC 0.659 is far from 'suspiciously perfect'"
+      },
+      "oof_metrics": {
+        "ok": true,
+        "evidence": "all sec-3 honest scores are OOF under the same folds (assert np.isfinite(...).all())"
+      }
+    },
+    "confession_test_auc": 1.0,
+    "honest_oof_auc": 0.659,
+    "label_window_cols": [
+      "target_mean",
+      "decline_11d"
+    ]
+  },
+  "claim_rewrite": {
+    "claims": [
+      {
+        "as_written": "Momentum CONFIRMED as the main risk signal (+0.107 after a 2-slice audit).",
+        "rewrite": "Measured: momentum showed the largest single-axis and permutation association with 11-day decline in this lane's audits (single-axis AUC 0.585; grouped-OOF model leans on it first). Directional, observed on one month's mid-panel and one 11-day label - it raises review priority; it is not evidence that momentum CAUSES decline.",
+        "licensed_by": "single-axis AUC 0.585 + w05 permutation top_lever = momentum_capped"
+      },
+      {
+        "as_written": "The model ranks decline risk better than the hand rule overall.",
+        "rewrite": "Measured on the same grouped-OOF evaluation: AUC 0.659 vs 0.544 and P@20 0.55 vs 0.35 (base rate 15.9%). Decision-support: the model changes which ~20 pages a reviewer reads first in this slice; it is not a validated production lift and says nothing about pages outside this population.",
+        "licensed_by": "w05 comparison_table: LR AUC 0.659/P@20 0.55 vs rule AUC 0.544/P@20 0.35 (same-data receipt)"
+      },
+      {
+        "as_written": "The CTR-fix flag is a confirmed signal at the 11-day horizon (+11.0 / +7.7 / +7.3 pp across the top three position bands).",
+        "rewrite": "Observed: within this slice, low band-relative CTR (the flag) co-occurred with larger 11-day declines in the audited position bands (each band n >= 30, per the study's own floor discipline). Directional - it marks a page for a click-capture review; the measured gaps are slice-conditional, and the flag's construction receipt (band medians, <= 03-20 only) bounds what it can claim.",
+        "licensed_by": "w04 CTR-fix slice receipts (top-3/4-10/11-30, n>=30) + w05 coef ctr_fix_flag +0.074"
+      },
+      {
+        "as_written": "Random Forest's complexity did not earn its keep.",
+        "rewrite": "Measured: under the same client-grouped OOF protocol, the RF's mean fold AUC matched the LR's (0.657 vs 0.656) but its P@20 was 0.25 vs 0.55 - no top-of-queue gain to offset the loss of readable coefficients. Decision-support wording: on this slice, no measured benefit bought the complexity; revisit if features or slice change.",
+        "licensed_by": "w05 comparison_table RF row + fold_auc receipt"
+      }
+    ],
+    "rule": "no claim goes further than its receipt; every rewrite keeps its anchoring number and its slice bounds"
+  }
+}
