@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which content pages lose search visibility next? A review-first ranking model, receipts included</title>
+<meta name="description" content="A client-grouped model ranks an 83,258-page content portfolio for human review at P@20 0.55 vs 0.35 for the existing hand rule (base rate 15.9%) - with the 98% blind spot, a size-of-prize rail, a no-go list, and six monitoring triggers shipped alongside. Every number ties to a committed receipt.">
+<style>
+:root{--ink:#1d2733;--muted:#5b6b7b;--line:#d8e0e7;--accent:#2f5d8f;--soft:#f4f7fa;--warn:#a4453e}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--ink);font:17px/1.7 Charter,Georgia,"Times New Roman",serif}
+.wrap{max-width:50rem;margin:0 auto;padding:2.2rem 1.2rem 4rem}
+.kicker{font:600 .72rem/1.5 system-ui,sans-serif;letter-spacing:.14em;color:var(--accent);margin:0 0 .8rem;text-transform:uppercase}
+h1{font:700 clamp(1.6rem,4.4vw,2.35rem)/1.25 system-ui,sans-serif;margin:.1rem 0 .7rem}
+.sub{color:var(--muted);font-size:1.02rem;margin:0 0 1rem}
+.meta{font:0.92rem system-ui,sans-serif;margin:0}
+.meta a{color:var(--accent)}
+nav{margin:1.6rem 0 2rem;padding:.55rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font:.9rem system-ui,sans-serif}
+nav a{color:var(--ink);text-decoration:none;margin-right:.55rem;white-space:nowrap}
+nav a:hover{color:var(--accent)}
+section{margin:2.6rem 0}
+h2{font:700 1.35rem/1.3 system-ui,sans-serif;margin:0 0 .8rem;padding-bottom:.35rem;border-bottom:2px solid var(--soft)}
+h3{font:600 1.05rem/1.4 system-ui,sans-serif;margin:1.6rem 0 .5rem}
+p{margin:.7rem 0}
+ul,ol{margin:.7rem 0;padding-left:1.4rem}
+li{margin:.4rem 0}
+code{background:var(--soft);padding:.08rem .35rem;border-radius:3px;font:.87rem/1.5 ui-monospace,Consolas,monospace}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font:.92rem/1.5 system-ui,sans-serif}
+th,td{border:1px solid var(--line);padding:.45rem .6rem;text-align:left}
+th{background:var(--soft);font-weight:600}
+tr.hl td{font-weight:700;background:#eef4fa}
+caption{caption-side:bottom;text-align:left;color:var(--muted);font-size:.82rem;padding-top:.4rem}
+figure{margin:1.6rem 0;padding:1rem;background:var(--soft);border-radius:6px}
+figure img{width:100%;height:auto;display:block;background:#fff}
+figcaption{color:var(--muted);font-size:.86rem;line-height:1.5;padding-top:.6rem}
+.note{color:var(--muted);font-size:.9rem}
+.warn{color:var(--warn)}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font:.86rem/1.6 system-ui,sans-serif}
+footer a{color:var(--accent)}
+@media print{nav,figure{background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">FlyRank ML Internship &middot; Capstone research page &middot; October 2026</p>
+  <h1>Which content pages lose search visibility next?</h1>
+  <p class="sub">A review-first ranking model for an 83,258-page portfolio &mdash; one pseudonymous slice, 36 clients, month 2026-03 &mdash; and every number below ties to a committed receipt JSON.</p>
+  <p class="meta"><a href="https://github.com/tanay1122/flyrank-ml">Code &amp; receipts (repo)</a> &middot; <a href="https://colab.research.google.com/github/tanay1122/flyrank-ml/blob/main/work/notebooks/capstone.ipynb?flush_cache=true">Capstone notebook (Colab)</a> &middot; <a href="https://huggingface.co/datasets/FlyRank/internship-warehouse">Dataset page</a></p>
+</header>
+
+<nav>
+  <a href="#abstract">Abstract</a><a href="#introduction">Introduction</a><a href="#data">Data</a><a href="#methodology">Methodology</a><a href="#results">Results</a><a href="#limitations">Limitations</a><a href="#recommendations">Recommendations</a><a href="#reproducibility">Reproducibility</a><a href="#acknowledgments">Acknowledgments</a>
+</nav>
+
+<section id="abstract">
+<h2>Abstract</h2>
+<p>Search traffic in large content portfolios erodes every month, yet at any point in time the pages that will decline next are mostly unknowable &mdash; so this study asks whether a trained model can rank a human reviewer's reading queue better than the existing hand rule. The evidence comes from one pseudonymous warehouse slice: 83,258 pages across 36 clients in month 2026-03, features readable at decision time only (through 2026-03-20), a relative-to-self decline label judged on 03-21..31, and a 15.9% base decline rate, with 314 label-absent pages plus 37 no-pace pages dropped and disclosed. Twenty-one decision-time features feed a logistic model validated by 5-fold client-grouped splits &mdash; no client ever sits in both train and test &mdash; against a hand-rule baseline, under a ten-item leakage checklist that includes a deliberate confession test: adding the label's own input drove AUC 0.659 to 1.000, and it was removed. The honest result: review-first precision P@20 0.55 vs 0.35 for the hand rule on the same evaluation (base rate 15.9% printed beside every metric), full-frame AUC 65.9 vs 54.4 &mdash; while 13,037 of 13,277 decliners (98%) rank beyond 500, so this is a review-order queue, never a coverage claim. The deliverable ships as a playbook &mdash; ranked queue with reason codes, a size-of-prize rail for the big pages the model ranks lowest but that pay most, a five-item no-go list, and six monitoring triggers &mdash; and every number on this page traces to a committed receipt JSON.</p>
+</section>
+
+<section id="introduction">
+<h2>Introduction &mdash; the decision this supports</h2>
+<p>Every review cycle starts the same way: someone has to choose which pages to open first. This study supports that one decision &mdash; the reading order for the coming week &mdash; and deliberately nothing else. On the studied slice, a random 20-page reading list would hold about 3 of the pages that genuinely declined over the next 11 days (base rate 15.9%); the production hand rule's list held 7 (P@20 0.35); this model's list held 11 (P@20 0.55). Doubling the hit rate changes which pages get opened this week &mdash; without pretending the model covers the problem, because most decliners (98%) sit far down the ranking.</p>
+<p>What this page is <em>not</em>: an auto-action list, a prediction of a search engine, or an experiment. No intervention ran anywhere in this work, so no sentence here says "doing X will produce Y." The claim ladder tops out at observed, measured, directional, decision-support.</p>
+</section>
+
+<section id="data">
+<h2>Data</h2>
+<p>One mid-panel month from a large, gated warehouse release hosted on the <a href="https://huggingface.co/datasets/FlyRank/internship-warehouse">dataset page</a>: daily performance rows per pseudonymous page (client hashes and content hashes only &mdash; no brand names, no URLs, no raw queries), plus a dimension table of decision-time page metadata. The lane deliberately leaves later panel months sealed.</p>
+<ul>
+  <li><strong>Frame:</strong> 83,258 pages passing the floor (SUM impressions &ge; 100, COUNT &ge; 10 days, GSC rows available), 36 clients.</li>
+  <li><strong>Feature window:</strong> report_date &le; 2026-03-20 &mdash; everything a reviewer could read at decision time.</li>
+  <li><strong>Label window:</strong> 2026-03-21..31 &mdash; never appears on the left side of any feature.</li>
+  <li><strong>Disclosed drops:</strong> 314 pages absent from the label window (unknowable this month) plus 37 pages without early-week pace &mdash; a stated selection choice, not a hidden one.</li>
+  <li><strong>Metadata opacity:</strong> for 67,109 of 83,258 pages (80.6%), the last update date cannot be resolved at decision time &mdash; the model carries a neutralizing flag instead of a wrong age.</li>
+</ul>
+</section>
+
+<section id="methodology">
+<h2>Methodology</h2>
+<h3>Label</h3>
+<p><code>decline_11d</code> = the page's mean daily impressions in 03-21..31 fell below 0.70&times; its mid-month pace &mdash; a relative-to-self threshold, not an absolute volume line.</p>
+<h3>Features (21)</h3>
+<p>Momentum capped at 10&times;; logs of early-window impressions, click rate, search volume, word count, backlinks; position mean; row staleness capped; days active; the <code>meta_unknown</code> neutralizing flag; a band-relative CTR-below-median flag; competition; and intent &amp; content-type dummies. No product-built scores, no outcome-window columns anywhere (asserted by name and by scan).</p>
+<h3>Baseline and validation</h3>
+<p>The baseline is the production hand rule (staleness + pace + impact points), whose queue on this slice distributed as 65,032 no-action / 18,092 watch / 134 refresh. All model rows use client-grouped 5-fold splits (GroupKFold, fixed seeds): every test page is scored by a model that never saw its client; disjointness is asserted per fold, all 36 clients. Fold AUC under the grouped protocol: 0.670, 0.645, 0.686, 0.634, 0.647 (mean 0.656 &plusmn; 0.019). The random-split row is printed everywhere as the memorization exhibit, never cited as skill.</p>
+<h3>Leakage audit</h3>
+<ul>
+  <li>Strict timeline assertion and a name-scan for the two label-window columns (<code>target_mean</code>, <code>decline_11d</code>) &mdash; none reach features.</li>
+  <li>Product-score scan (health scores, internal flags) &mdash; none in the feature matrix.</li>
+  <li><strong>Confession test:</strong> deliberately adding the label's own input pushed grouped out-of-fold AUC 0.659 &rarr; 1.000, then it was removed &mdash; the harness demonstrably catches a leak.</li>
+  <li>Population disclosure, per-fold disjointness, and base rate all printed in the same table.</li>
+  <li>Sanity: the permutation top lever is <code>momentum_capped</code> (shuffling it alone costs ~0.033 AUC), matching the audited direction of the calibration table rather than an arbitrary importance list.</li>
+</ul>
+<h3>Stability policy</h3>
+<p>Grouped receipts reproduce to the digit across reruns; the shuffled exhibit row is order-sensitive (it sits on a parallel GROUP BY row order) and its P@20 wobbles between 0.80-0.90 across reruns. Cross-checks therefore use declared tolerances &mdash; tight for grouped rows (0.11 AUC, 0.005 P@20), none for exhibit rows, which are only ever quoted as exhibits.</p>
+</section>
+
+<section id="results">
+<h2>Results &mdash; same data, same label, base rate printed beside every number</h2>
+<table>
+<caption>All rows share the slice and label; model rows are client-grouped out-of-fold scores. The exhibit row's split lets a client leak across train/test &mdash; it is an honesty receipt, not a claim.</caption>
+<thead><tr><th>Evaluation</th><th>AUC</th><th>P@20</th><th>P@100</th><th>P@500</th></tr></thead>
+<tbody>
+<tr><td>Hand rule (baseline)</td><td>0.544</td><td>0.35</td><td>0.28</td><td>0.32</td></tr>
+<tr class="hl"><td>Logistic model (client-grouped)</td><td>0.659</td><td>0.55</td><td>0.47</td><td>0.48</td></tr>
+<tr><td>Random forest (complexity check)</td><td>0.655</td><td>0.25</td><td>0.38</td><td>0.45</td></tr>
+<tr><td>Random-split exhibit <span class="warn">(not a claim)</span></td><td>0.674</td><td>0.85</td><td>0.68</td><td>0.52</td></tr>
+</tbody>
+</table>
+<p><strong>Base rate: 15.9%</strong>. In full-frame AUC terms the logistic model holds 65.9 vs 54.4 for the rule and 65.5 for the random forest; the exhibit row inflates to 67.4. The queue metric is P@20 (0.55 vs 0.35); at 100 and 500 pages the multiplicative edge persists (0.47 vs 0.28, 0.48 vs 0.32). Fold AUC under the grouped protocol: mean 0.656 &plusmn; 0.019. The two models' top-20 lists share 0 pages &mdash; the model finds different pages, not a resharpened version of the rule. The random forest matched the logistic model's fold mean (0.657 vs 0.656) without any top-of-queue gain &mdash; complexity did not earn its keep. The exhibit's inflation is the memorization gap: 1.5 AUC points and +0.35 P@20, and its P@20 wobbles 0.80-0.90 between reruns while every grouped row is stable.</p>
+<figure>
+<img src="img/fig_results_precision_at_k.png" alt="Bar chart: P@20 for hand rule (35%), LR (55%), RF (25%), exhibit (85%), with a 15.9% base-rate line">
+<figcaption>Review-first precision at 20 on the same slice and label: the model's 55% clears the hand rule's 35% and the 15.9% random line, while the hatched row is the memorization exhibit, not a claim.</figcaption>
+</figure>
+<h3>What drives the score</h3>
+<p>Top standardized coefficients: <code>momentum_capped</code> +0.276 (risk rises with pace spikes &mdash; matching the calibration table) and log impressions at -0.23 (bigger existing pages declined less, matching the volume finding below) &mdash; observed associations on one slice, not levers of causation.</p>
+<h3>The playbook read (what a reviewer sees)</h3>
+<p>The top-40 review list, reason-coded from committed receipts:</p>
+<table>
+<caption>Shares are per-code; a page can carry several codes, so shares sum to more than 100%.</caption>
+<thead><tr><th>Reason code</th><th>Pages carrying it</th><th>Observed decline rate</th><th>Share of frame</th></tr></thead>
+<tbody>
+<tr><td>MOMENTUM_SPIKE (this-week pace &gt; 2&times; last week)</td><td>5,763</td><td>29.8%</td><td>6.9%</td></tr>
+<tr><td>CTR_LEAK (click rate below band median)</td><td>37,137</td><td>19.4%</td><td>44.6%</td></tr>
+<tr><td>SIZE_OF_PRIZE (impressions &ge; 90th percentile)</td><td>8,328</td><td>7.2%</td><td>10.0%</td></tr>
+<tr><td>META_UNKNOWN (update age unresolvable)</td><td>67,109</td><td>15.1%</td><td>80.6%</td></tr>
+</tbody>
+</table>
+<p><strong>Honest read of the top-40:</strong> it held 23 decliners &mdash; 57.5% of those pages, vs about 6 expected for a random 40 &mdash; and its code mix was MOMENTUM_SPIKE 37, CTR_LEAK 35, META_UNKNOWN 29. Two audited patterns sit underneath the codes. Low click rate co-occurred with larger declines at every readable position: +11.0 / +7.7 / +7.3 pp in the top-3 / 4-10 / 11-30 bands (each tier cell n &ge; 4,367). Impressions volume ran the <em>opposite</em> way as a risk signal: near-floor pages declined 20.8% (n=35,073) while the page-giants declined 7.4% (n=95) &mdash; which is exactly why the model's risk ranking is not a prize ranking: zero SIZE_OF_PRIZE pages made the model's top-40, so the playbook carries a second rail &mdash; the ten biggest pages outside the top 40, holding 1,416,001 early-window impressions combined, every one of them also flagged META_UNKNOWN.</p>
+<p><strong>Blind spot, printed as a rule:</strong> 13,037 of 13,277 decliners (98%) rank beyond 500. The queue orders human attention; it never claims coverage.</p>
+<figure>
+<img src="img/fig_w07_code_decline_vs_base.png" alt="Bar chart: declines per reason code (29.8, 19.4, 7.2, 15.1 percent) with a dashed 15.9 percent base-rate line">
+<figcaption>Observed decline rate per reason code against the 15.9% base rate (one slice; the volume-opposite pattern is why the size rail exists).</figcaption>
+</figure>
+<figure>
+<img src="img/fig_w07_reason_codes_top40.png" alt="Bar chart: code counts in the model top-40 (momentum 37, CTR 35, meta 29)">
+<figcaption>Reason codes carried by the pages in the model's top-40 review list (counts, one slice).</figcaption>
+</figure>
+</section>
+
+<section id="limitations">
+<h2>Limitations &mdash; written by the author, not by a reviewer</h2>
+<ul>
+<li><strong>No causal claim anywhere.</strong> No experiment ran; every number is an association observed on one slice. "Momentum spikes decline more often" is measured and directional &mdash; it is not evidence that changing momentum will change outcomes.</li>
+<li><strong>One slice.</strong> Month 2026-03, one 11-day label window, one population (83,258 pages with its disclosed 314 + 37 drops). Other months require the grouped protocol to be re-run before any reuse.</li>
+<li><strong>The blind spot is structural.</strong> 98% of decliners rank beyond 500; the queue is review-order, not coverage &mdash; and the size rail exists precisely because score and prize are different axes.</li>
+<li><strong>Metadata opacity.</strong> 80.6% of pages have unresolvable update ages at decision time; the staleness verdict is MIXED on this label, so staleness is a lookup code, not a risk lever.</li>
+<li><strong>Exhibit-only wobble.</strong> Random-split receipts wobble between reruns (P@20 0.80-0.90) by construction of their row order; nothing published rests on a shuffled number.</li>
+<li><strong>Pseudonymous data.</strong> Ids are hashes; the human checks behind META_UNKNOWN and CTR_LEAK need real CMS access that a hashed dataset cannot include.</li>
+</ul>
+</section>
+
+<section id="recommendations">
+<h2>Recommendations &mdash; decision-support only</h2>
+<ol>
+<li><strong>Work the two rails, in this order.</strong> First the model's top-40 review list (57.5% observed decline in-slice, ~4&times; the base rate), then the size-of-prize rail: the ten biggest pages outside the top 40 &mdash; 1,416,001 early-window impressions combined &mdash; because score and prize are separate axes.</li>
+<li><strong>Read reason codes as lookup orders, not verdicts.</strong> MOMENTUM_SPIKE (29.8% vs the 15.9% base) &rarr; check for a real movement; CTR_LEAK (+11.0 / +7.7 / +7.3 pp observed gaps) &rarr; decide title fix, snippet fix, or nothing; META_UNKNOWN &rarr; resolve first, always; SIZE_OF_PRIZE &rarr; worth human attention regardless of score.</li>
+<li><strong>Keep the human in the loop.</strong> The five-item no-go list is part of the deliverable: no auto-refresh on staleness timers, no publish/archive/remove on score alone, no causal wording in anything client-facing, no skip-page rules from rank, no quoting of shuffled rows to humans.</li>
+<li><strong>Monitor against the committed thresholds.</strong> Six triggers, each tied to its receipt: new month partition (rebuild), grouped fold AUC mean below 0.60 (re-audit, retrain), P@20 below 0.40 (rebuild queue), base rate outside 13-19% (recheck the label threshold), meta-unknown share shift, client-set change (never leave the grouped protocol).</li>
+<li><strong>Before scaling: the next experiment.</strong> The refresh play remains the paper's suggestion, unproven on this lane's 11-day label (verdict MIXED) &mdash; the honest next step is a designed, age-matched refresh test, not a bigger observational model.</li>
+</ol>
+</section>
+
+<section id="reproducibility">
+<h2>Reproducibility</h2>
+<p>Everything lives in the <a href="https://github.com/tanay1122/flyrank-ml">public repo</a>: this page, the notebooks (open any with the Colab link in its header), and the receipts. No dataset is committed; the starter CSV is the only local puck.</p>
+<ul>
+<li><a href="https://colab.research.google.com/github/tanay1122/flyrank-ml/blob/main/work/notebooks/capstone.ipynb?flush_cache=true">capstone.ipynb</a> (this paper; builds figures from receipts only)</li>
+<li><a href="https://colab.research.google.com/github/tanay1122/flyrank-ml/blob/main/work/notebooks/w07_action_playbook.ipynb?flush_cache=true">w07_action_playbook.ipynb</a> (queue, codes, rails, no-go, triggers)</li>
+<li><a href="https://colab.research.google.com/github/tanay1122/flyrank-ml/blob/main/work/notebooks/w06_validation_audit.ipynb?flush_cache=true">w06_validation_audit.ipynb</a> (paper findings, honest-split before/after, confession test)</li>
+<li><a href="https://colab.research.google.com/github/tanay1122/flyrank-ml/blob/main/work/notebooks/w05_model.ipynb?flush_cache=true">w05_model.ipynb</a> (the honest comparison table, coefficients)</li>
+<li><a href="https://colab.research.google.com/github/tanay1122/flyrank-ml/blob/main/work/notebooks/w04_signal_audit.ipynb?flush_cache=true">w04_signal_audit.ipynb</a> (momentum calibration, CTR bands, volume table)</li>
+<li><a href="https://colab.research.google.com/github/tanay1122/flyrank-ml/blob/main/work/notebooks/w04_baseline_score.ipynb?flush_cache=true">w04_baseline_score.ipynb</a> (the hand rule)</li>
+<li><a href="https://colab.research.google.com/github/tanay1122/flyrank-ml/blob/main/work/notebooks/w03_feature_leakage_check.ipynb?flush_cache=true">w03_feature_leakage_check.ipynb</a> &middot; <a href="https://colab.research.google.com/github/tanay1122/flyrank-ml/blob/main/work/notebooks/w03_data_contract.ipynb?flush_cache=true">w03_data_contract.ipynb</a> &middot; <a href="https://colab.research.google.com/github/tanay1122/flyrank-ml/blob/main/work/notebooks/w02_ml_task_framing.ipynb?flush_cache=true">w02_ml_task_framing.ipynb</a> &middot; <a href="https://colab.research.google.com/github/tanay1122/flyrank-ml/blob/main/work/notebooks/w01_research_question.ipynb?flush_cache=true">w01_research_question.ipynb</a></li>
+</ul>
+<p><strong>Receipts</strong> (committed JSON, one per week): <code>w04_signal_receipt.json</code>, <code>w04_baseline_receipt.json</code>, <code>w05_model_receipt.json</code>, <code>w06_validation_receipt.json</code>, <code>w07_playbook_receipt.json</code> under <code>work/outputs/</code>. Every number on this page appears in at least one of them.</p>
+<p><strong>To re-run:</strong> accept the gate on the <a href="https://huggingface.co/datasets/FlyRank/internship-warehouse">dataset page</a>, supply a read-only token (environment variable or Colab secret), then Runtime &rarr; Run all with fixed seeds. The capstone runs from the committed receipts alone. Grouped receipts reproduce to the digit; exhibit rows wobble by design and are labeled as such.</p>
+</section>
+
+<section id="acknowledgments">
+<h2>Acknowledgments</h2>
+<p>This work was completed during the FlyRank ML Internship 2026 &mdash; <strong>FlyRank &mdash; <a href="https://flyrank.ai">https://flyrank.ai</a></strong> &mdash; which hosts the pseudonymous warehouse release and set the public-safe constraints under which it was written.</p>
+<p>Thanks to the internship program's reviewers, who kept every claim tied to a number it can carry. All remaining errors and uncertainties are the author's.</p>
+</section>
+
+<footer>
+Published October 2026 &middot; deployed via GitHub Pages from the repo's <code>/docs</code> folder &middot; every number on this page reproduces from the receipts in <code>work/outputs/</code> &middot; no client names, URLs, or credentials appear anywhere.
+</footer>
+
+</div>
+</body>
+</html>
