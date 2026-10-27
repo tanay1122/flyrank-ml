@@ -1,0 +1,118 @@
+{
+  "notebook": "w05_model (ML-08, Week 5)",
+  "frame_pages": 83258,
+  "base_rate_pct": 15.9,
+  "feature_names": [
+    "momentum_capped",
+    "log_imp",
+    "log_click_rate",
+    "pos_mean",
+    "stale_rows_capped",
+    "days_active",
+    "meta_stale_days",
+    "meta_unknown",
+    "ctr_fix_flag",
+    "log_search",
+    "competition_filled",
+    "log_wordcount",
+    "log_backlinks",
+    "it_commercial|keyword article",
+    "it_informational|comparison article",
+    "it_informational|keyword article",
+    "it_navigational|keyword article",
+    "it_transactional|comparison article",
+    "it_transactional|keyword article",
+    "it_unknown|feedly article",
+    "it_unknown|keyword article"
+  ],
+  "meta_unknown_pages": 67109,
+  "momentum_capped_pages": 174,
+  "split": {
+    "design": "client-grouped 5-fold (GroupKFold)",
+    "clients": 36,
+    "all_folds_client_disjoint": true,
+    "dishonest_contrast_split": "KFold(5, shuffle=True, random_state=0) - printed, never claimed"
+  },
+  "comparison_table": [
+    {
+      "design": "Baseline: Week-4 hand rule (ties -> volume, w04 queue order)",
+      "AUC": 54.4,
+      "P@20": 0.35,
+      "P@100": 0.28,
+      "P@500": 0.32,
+      "Recall@100": 0.002
+    },
+    {
+      "design": "Logistic Regression, client-grouped OOF",
+      "AUC": 65.9,
+      "P@20": 0.55,
+      "P@100": 0.47,
+      "P@500": 0.48,
+      "Recall@100": 0.004
+    },
+    {
+      "design": "Random Forest, client-grouped OOF",
+      "AUC": 65.5,
+      "P@20": 0.25,
+      "P@100": 0.38,
+      "P@500": 0.45,
+      "Recall@100": 0.003
+    },
+    {
+      "design": "LogReg shuffled split - DISHONEST receipt, not a claim",
+      "AUC": 67.4,
+      "P@20": 0.85,
+      "P@100": 0.68,
+      "P@500": 0.52,
+      "Recall@100": 0.005
+    }
+  ],
+  "fold_auc": {
+    "lr": [
+      0.67,
+      0.645,
+      0.686,
+      0.634,
+      0.647
+    ],
+    "rf": [
+      0.68,
+      0.672,
+      0.673,
+      0.629,
+      0.633
+    ]
+  },
+  "random_split_receipt": {
+    "auc": 67.4,
+    "p_at_20": 0.85
+  },
+  "rule_auc": 0.544,
+  "lr_oof_auc": 0.659,
+  "top20_overlap": 0,
+  "false_picks_in_top40": 3,
+  "missed_decliners_beyond_rank500": 13037,
+  "top_lever": "momentum_capped",
+  "coef_top5": [
+    {
+      "feature": "momentum_capped",
+      "coef_mean": 0.276
+    },
+    {
+      "feature": "log_imp",
+      "coef_mean": -0.23
+    },
+    {
+      "feature": "log_wordcount",
+      "coef_mean": -0.223
+    },
+    {
+      "feature": "log_click_rate",
+      "coef_mean": -0.151
+    },
+    {
+      "feature": "log_backlinks",
+      "coef_mean": 0.119
+    }
+  ]
+}
