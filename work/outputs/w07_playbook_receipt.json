@@ -1,0 +1,119 @@
+{
+  "notebook": "w07_action_playbook (ML-10, Week 7)",
+  "slice": "month=2026-03, one row = one page, floor 100 imps / 10 days, gsc IS TRUE, aggregates <= 03-20",
+  "frame_pages": 83258,
+  "base_rate_pct": 15.9,
+  "disclosed_drops": {
+    "absent_label_window": 314,
+    "no_pace": 37
+  },
+  "cross_check": {
+    "grouped_auc_vs_w05": 65.9,
+    "match_auc": true,
+    "all_folds_client_disjoint": true
+  },
+  "reason_codes": {
+    "table": [
+      {
+        "code": "MOMENTUM_SPIKE",
+        "n": 5763,
+        "decline_pct": 29.8,
+        "share_pct": 6.9
+      },
+      {
+        "code": "CTR_LEAK",
+        "n": 37137,
+        "decline_pct": 19.4,
+        "share_pct": 44.6
+      },
+      {
+        "code": "SIZE_OF_PRIZE",
+        "n": 8328,
+        "decline_pct": 7.2,
+        "share_pct": 10.0
+      },
+      {
+        "code": "META_UNKNOWN",
+        "n": 67109,
+        "decline_pct": 15.1,
+        "share_pct": 80.6
+      }
+    ],
+    "licenses": {
+      "MOMENTUM_SPIKE": "w04_signal_receipt test1_momentum table_main (>2.0 band 29.8%, n=5,763) + w05 top_lever/coef",
+      "CTR_LEAK": "w04_signal_receipt flag_test_ctrfix (+11.0/+7.7/+7.3 pp in top-3/4-10/11-30, n>=30 each)",
+      "SIZE_OF_PRIZE": "w04_signal_receipt test2_volume (OPPOSITE verdict; near-floor 20.8% n=35,073 vs giants 7.4% n=95)",
+      "META_UNKNOWN": "w04_baseline_receipt verdictA2_staleness_metadata MIXED + meta_unknown share 80.6%",
+      "RULE_RAIL": "size-of-prize rail: biggest pages outside model top 40"
+    }
+  },
+  "queue": {
+    "model_top40": {
+      "n": 40,
+      "decliners": 23,
+      "decline_pct_observed": 57.5
+    },
+    "code_counts_top40": {
+      "MOMENTUM_SPIKE": 37,
+      "CTR_LEAK": 35,
+      "META_UNKNOWN": 29
+    },
+    "size_rail": {
+      "n": 10,
+      "imps_sum": 1416001
+    }
+  },
+  "blind_spot_rule": "13,037 of 13,277 decliners (98%) rank beyond 500 (w05 receipt); queue is review-order, not coverage",
+  "no_go_list": [
+    "no auto-refresh on a staleness timer (verdict MIXED; unknown-metadata share 80.6%)",
+    "no auto-publish/archive/noindex on score alone (P@20 0.55 at base 15.9%)",
+    "no causal wording (no experiment ran; claim ladder ends at decision-support)",
+    "no skip-page rules from ranks (98% of decliners live beyond rank 500)",
+    "no quoting of the random-split row to humans (wobble exhibit 0.80-0.90 P@20)"
+  ],
+  "monitor_triggers": [
+    {
+      "trigger": "new month partition lands",
+      "trip_when": "always (calendar)",
+      "receipt": "every metric here lived on month=2026-03, 11-day label 03-21..31",
+      "action": "rebuild frame on the new month, same grouped protocol + seeds 0, revalidate before any reuse"
+    },
+    {
+      "trigger": "grouped OOF AUC degrades",
+      "trip_when": "fold mean < 0.60 (committed: 0.659, fold sd 0.019)",
+      "receipt": "w05_model_receipt.json fold_auc",
+      "action": "re-run the leakage checklist, inspect feature drift, retrain"
+    },
+    {
+      "trigger": "review-first precision degrades",
+      "trip_when": "P@20 < 0.40 (committed: 0.55; base rate 15.9%)",
+      "receipt": "w05 comparison_table LR row",
+      "action": "check fold disjointness + reason-code mix; rebuild queue"
+    },
+    {
+      "trigger": "base-rate shift",
+      "trip_when": "decline base rate outside 13-19% (committed: 15.9%)",
+      "receipt": "w04/w05/w06 frame receipts agree",
+      "action": "re-check label threshold (0.70x pace) against the new month before anything else"
+    },
+    {
+      "trigger": "metadata availability changes",
+      "trip_when": "meta_unknown share moves materially (committed: 80.6%)",
+      "receipt": "w05 meta_unknown_pages vs frame_pages",
+      "action": "if the unknown share drops, re-run the staleness tests (currently MIXED) before ever using meta_stale_days as a trigger"
+    },
+    {
+      "trigger": "client set changes",
+      "trip_when": "new client portfolio in frame (all splits stay client-grouped; 36 clients committed)",
+      "receipt": "w05 split.clients / all_folds_client_disjoint",
+      "action": "keep GroupKFold by client; never a random split, never client-informing features"
+    }
+  ],
+  "exports": {
+    "queue_csv": "work/outputs/action_queue_2026_03.csv",
+    "figures": [
+      "work/outputs/figures/fig_w07_reason_codes_top40.png",
+      "work/outputs/figures/fig_w07_code_decline_vs_base.png"
+    ]
+  }
+}
